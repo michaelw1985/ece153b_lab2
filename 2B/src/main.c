@@ -1,9 +1,9 @@
 /*
  * ECE 153B
- *
- * Name(s):
- * Section:
- * Lab: 2B
+*
+ * Name(s): Michael Wong, Bharat Kathi
+ * Section: Tuesday, 7 PM
+ * Lab: 2C
  */
 
 #include "stm32l476xx.h"

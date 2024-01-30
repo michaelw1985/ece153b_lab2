@@ -1,8 +1,8 @@
 /*
  * ECE 153B
  *
- * Name(s):
- * Section:
+ * Name(s): Michael Wong, Bharat Kathi
+ * Section: Tuesday, 7 PM
  * Lab: 2C
  */
  
