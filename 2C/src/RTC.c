@@ -102,11 +102,11 @@ void RTC_Init(void) {
 #define RTC_POSITION_DR_WDU   (uint32_t)POSITION_VAL(RTC_DR_WDU)
 
 void RTC_Set_Calendar_Date(uint32_t WeekDay, uint32_t Day, uint32_t Month, uint32_t Year) {
-	// [TODO] Write the date values in the correct place within the RTC Date Register
+	RTC->DR = Year << 16 | WeekDay << 13 | Month << 8 | Day;
 }
 
 void RTC_Set_Time(uint32_t Format12_24, uint32_t Hour, uint32_t Minute, uint32_t Second) {
-	// [TODO] Write the time values in the correct place within the RTC Time Register
+	RTC->TR = Format12_24 << 22 | Hour << 16 | Minute << 8 | Second;
 }
 
 void RTC_Clock_Init(void) {
@@ -147,46 +147,66 @@ void RTC_Clock_Init(void) {
 }
 
 void RTC_Disable_Write_Protection(void) {
-	// [TODO]
+	RTC->WPR |= (uint8_t)0xCA;
+	RTC->WPR |= (uint8_t)0x53;
 }
 	
 void RTC_Enable_Write_Protection(void) {
-	// [TODO]
+	RTC->WPR |= (uint8_t)0x69;
 }
 
 uint32_t RTC_TIME_GetHour(void) {
-	// [TODO]
-	return 0;
+	uint32_t t = RTC->TR;
+	uint32_t hourT = (t & RTC_TR_HT) >> 20;
+	uint32_t hourU = (t & RTC_TR_HU) >> 16;
+	uint32_t hour = hourT * 10 + hourU;
+	return hour;
 }
 
 uint32_t RTC_TIME_GetMinute(void) {
-	// [TODO]
-	return 0;
+	uint32_t t = RTC->TR;
+	uint32_t minuteT = (t & RTC_TR_MNT) >> 12;
+	uint32_t minuteU = (t & RTC_TR_MNU) >> 8;
+	uint32_t minute = minuteT * 10 + minuteU;
+	return minute;
 }
 
 uint32_t RTC_TIME_GetSecond(void) {
-	// [TODO]
-	return 0;
+	uint32_t t = RTC->TR;
+	uint32_t secondT = (t & RTC_TR_ST) >> 4;
+	uint32_t secondU = t & RTC_TR_SU;
+	uint32_t second = secondT * 10 + secondU;
+	return second;
 }
 
 uint32_t RTC_DATE_GetMonth(void) {
-	// [TODO]
-	return 0;
+	uint32_t t = RTC->DR;
+	uint32_t monthT = (t & RTC_DR_MT) >> 12;
+	uint32_t monthU = (t & RTC_DR_MU) >> 8;
+	uint32_t month = monthT * 10 + monthU;
+	return month;
 }
 
 uint32_t RTC_DATE_GetDay(void) {
-	// [TODO]
-	return 0;
+	uint32_t t = RTC->DR;
+	uint32_t dayT = (t & RTC_DR_DT) >> 4;
+	uint32_t dayU = t & RTC_DR_DU;
+	uint32_t day = dayT * 10 + dayU;
+	return day;
 }
 
 uint32_t RTC_DATE_GetYear(void) {
-	// [TODO]
-	return 0;
+	uint32_t t = RTC->DR;
+	uint32_t yearT = (t & RTC_DR_YT) >> 20;
+	uint32_t yearU = (t & RTC_DR_YU) >> 16;
+	uint32_t year = yearT * 10 + yearU;
+	return year;
 }
 
 uint32_t RTC_DATE_GetWeekDay(void) {
-	// [TODO]
-	return 0;
+	uint32_t t = RTC->DR;
+	uint32_t weekDayU = (t & RTC_DR_WDU) >> 13;
+	return weekDayU;
 }
 
 void Get_RTC_Calendar(char * strTime, char * strDate) {
